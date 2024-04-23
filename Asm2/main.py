@@ -17,9 +17,12 @@ def open_img():
 
     # Calculate new dimensions while maintaining aspect ratio
     width, height = image.size
-    aspect_ratio = width / height
-    new_width = 512
-    new_height = int(new_width / aspect_ratio)
+    if width < height:  # Short edge is width
+        new_width = 512
+        new_height = int((height / width) * new_width)
+    else:  # Short edge is height
+        new_height = 512
+        new_width = int((width / height) * new_height)
 
     image = image.resize((new_width, new_height), Image.LANCZOS)
     img = ImageTk.PhotoImage(image)
@@ -66,8 +69,8 @@ image = None
 load_btn = Button(root, text='Load Image', command=open_img)
 load_btn.pack()
 
-hp_scale = Scale(root, from_=1, to=100, resolution=1, orient=tk.HORIZONTAL, label="High Pass Filter Radius",
-                 command=apply_filter)
+hp_scale = Scale(root, from_=1, to=500, resolution=1, orient=tk.HORIZONTAL, label="High Pass Filter Radius",
+                 command=apply_filter, length=500)
 hp_scale.pack()
 
 panel = tk.Label(root)
